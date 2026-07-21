@@ -32,7 +32,6 @@
     border:1px solid var(--line);border-radius:20px;padding:34px 30px 40px}
   h1{font-size:28px;line-height:1.15;margin:0 0 4px;letter-spacing:-.02em}
   .meta{color:var(--muted);font-size:13.5px;margin:0 0 22px}
-  .meta code{background:rgba(255,255,255,.06);padding:1px 6px;border-radius:5px;font-size:12.5px;color:var(--text-2)}
   .callout{background:rgba(124,224,168,.08);border:1px solid rgba(124,224,168,.28);border-left:4px solid var(--teal);
     border-radius:12px;padding:16px 18px;margin:6px 0 26px;color:var(--text)}
   .callout strong{color:#c8f4dc}
@@ -56,87 +55,154 @@
 <div class="wrap">
   <div class="sheet">
     <h1>Privacy Policy</h1>
-    <p class="meta">Last updated: 6 July 2026 · App: <strong>BabyCam</strong> (<code>com.colworx.babycam</code>) · Developer: Zuhaib Ali Shah</p>
+    <p class="meta">Last updated: 22 July 2026 · App: <strong>BabyCam</strong> · Developer: Zuhaib Ali Shah</p>
 
     <div class="callout">
-      <strong>In short:</strong> BabyCam turns two of your own phones into a baby monitor. The live
-      video and audio go <strong>directly between your two devices</strong>, end-to-end encrypted — we
-      never see or store them. We use Google Firebase for anonymous usage analytics and crash
-      diagnostics to keep the app working. We do not sell your data, and there are no accounts.
+      <strong>In short:</strong> BabyCam turns two of your own phones into a baby monitor. Live video and
+      audio go <strong>directly between your two devices</strong>, end-to-end encrypted — we never see,
+      upload, or store them. There are <strong>no accounts and no sign-up</strong>, and we never sell your
+      data. We use Google Firebase for anonymous usage analytics and crash diagnostics to keep the app
+      reliable.
     </div>
 
     <h2>1. Who we are</h2>
-    <p>BabyCam is developed by Zuhaib Ali Shah. For any privacy question, contact
-    <a href="mailto:mz.ashah@outlook.com">mz.ashah@outlook.com</a>.</p>
+    <p>BabyCam is an independent, free app developed by <strong>Zuhaib Ali Shah</strong>. For any privacy
+    question or request, contact <a href="mailto:mz.ashah@outlook.com">mz.ashah@outlook.com</a>.</p>
 
-    <h2>2. Camera, microphone and audio/video streams</h2>
+    <h2>2. Live camera, microphone and audio/video</h2>
     <ul>
       <li>The <strong>baby device</strong> captures camera and microphone; the <strong>parent
       device</strong> receives them. Streaming is peer-to-peer (WebRTC) and <strong>encrypted in
       transit</strong> (DTLS-SRTP).</li>
-      <li>Audio/video is <strong>never uploaded to us or stored on any server</strong>. It exists only
-      live, on your two devices, during a session.</li>
-      <li>Snapshots you choose to save are written only to <strong>your device's local gallery</strong>.</li>
+      <li>Your audio and video are <strong>never uploaded to us or stored on any server</strong>. They
+      exist only live, on your two devices, during a session.</li>
+      <li>Camera, microphone and playback all start <strong>OFF</strong> — the parent explicitly turns
+      them on. When no audio is being sent, the microphone hardware is released (so the OS privacy
+      indicator only shows while talk/listen is actually active).</li>
+      <li>Any <strong>snapshots</strong> or <strong>video clips</strong> you choose to save are written
+      only to <strong>your own device's local gallery/storage</strong> — never to us.</li>
     </ul>
 
-    <h2>3. Pairing &amp; connection data</h2>
+    <h2>3. Two-way talk, remote control, lullabies &amp; alerts</h2>
+    <ul>
+      <li>Two-way talk sends the parent's microphone audio to the baby device (same encrypted P2P path).
+      Remote controls (toggle the baby's camera/mic/flashlight, flip camera, play a lullaby or a chime,
+      trigger the low-battery alert) are short encrypted control messages — they carry no media and
+      nothing is stored by us.</li>
+      <li>Lullabies / white-noise are generated on the baby device; no audio files are uploaded.</li>
+    </ul>
+
+    <h2>4. Pairing &amp; connection data</h2>
     <ul>
       <li>Devices pair with a short <strong>4-digit code</strong> shown on the baby device and typed on
-      the parent device. Pairing information is stored <strong>only on your devices</strong>.</li>
+      the parent device. A random <strong>128-bit room secret</strong> is also exchanged so the code
+      alone can never decrypt your media. Pairing information is stored <strong>only on your
+      devices</strong>.</li>
       <li>To help the two phones find each other, small connection-setup ("signaling") messages pass
-      through a third-party MQTT message broker (HiveMQ). These messages are
-      <strong>additionally AES-256-GCM encrypted</strong> by the app, so the broker only ever relays
-      ciphertext. They do not contain your audio or video.</li>
+      through a third-party message broker (HiveMQ). These messages are <strong>additionally AES-256-GCM
+      encrypted</strong> by the app, so the broker only ever relays ciphertext. They contain no audio or
+      video.</li>
       <li>When the two phones are on different networks, media may be relayed through a TURN server
-      (Cloudflare) purely to traverse firewalls. Relayed media stays end-to-end encrypted.</li>
+      (Cloudflare, with Metered as a fallback) purely to traverse firewalls. Relayed media stays
+      end-to-end encrypted; the relay cannot read it.</li>
     </ul>
 
-    <h2>4. Analytics &amp; diagnostics (Google Firebase)</h2>
-    <p>To understand how the app is used and to fix crashes, we use Google Firebase, which acts as a
-    data processor on our behalf:</p>
+    <h2>5. Remote wake (push)</h2>
+    <p>If the baby device has been backgrounded or put to sleep, the parent can wake it. This uses a
+    Firebase Cloud Messaging (FCM) push, relayed by a small stateless Cloudflare Worker. The baby
+    device's push token is shared only with your paired parent device (through the encrypted pairing) and
+    is used <strong>only to wake the baby app</strong> — it never reveals your media.</p>
+
+    <h2>6. Nearby Talk (optional walkie-talkie)</h2>
+    <p>BabyCam includes an optional push-to-talk feature that is <strong>completely separate from baby
+    monitoring</strong>. It can connect over Bluetooth, the same Wi-Fi, or the internet with a channel
+    code.</p>
+    <ul>
+      <li>Bluetooth is used only to <strong>discover nearby BabyCam devices</strong> by a fixed service
+      identifier — <strong>we never derive, request, or store your location</strong>.</li>
+      <li>The internet channel is encrypted using the channel code. Voice is half-duplex (push-to-talk)
+      and <strong>nothing is recorded or stored</strong> — audio exists only while you hold the button.</li>
+      <li>This feature can be turned off remotely by the developer and is not required to use the
+      monitor.</li>
+    </ul>
+
+    <h2>7. Safety reminders &amp; app lock</h2>
+    <ul>
+      <li>Safety reminders (e.g. bedtime, feeding) are scheduled and stored <strong>only on your
+      device</strong>; no reminder content leaves the phone.</li>
+      <li>The optional app lock (PIN or fingerprint/biometric) is verified <strong>entirely on your
+      device</strong>. Your PIN is stored only as a salted, hashed value; biometrics never leave the
+      device's secure hardware.</li>
+    </ul>
+
+    <h2>8. In-app updates</h2>
+    <p>BabyCam can check for a newer version and install it for you. To do this it fetches a small public
+    version file and, if you choose to update, downloads the new app file from our public releases page
+    on GitHub. This check sends <strong>no personal data</strong> — it is a plain download, like opening
+    a web link.</p>
+
+    <h2>9. Analytics &amp; diagnostics</h2>
+    <p>To understand how the app is used and to fix crashes, we use Google Firebase, which acts as a data
+    processor on our behalf:</p>
     <div class="tw"><table>
       <tr><th>Service</th><th>What it collects</th><th>Why</th></tr>
-      <tr><td>Firebase Analytics</td><td>Anonymous app-usage events (e.g. pairing completed, camera
-        toggled), device model, OS version, coarse app-interaction data</td><td>Understand feature
-        usage and stability</td></tr>
-      <tr><td>Firebase Crashlytics</td><td>Crash stack traces, device model/OS, a random per-session
-        identifier, and whether the device was in "baby" or "parent" mode</td><td>Diagnose and fix
-        crashes</td></tr>
+      <tr><td>Firebase Analytics</td><td>Anonymous app-usage events (e.g. pairing completed, a control
+        toggled), device model, OS version, coarse interaction data</td><td>Understand feature usage and
+        stability</td></tr>
+      <tr><td>Firebase Crashlytics</td><td>Crash stack traces, device model/OS, a random per-session id,
+        and whether the device was in "baby" or "parent" mode</td><td>Diagnose and fix crashes</td></tr>
       <tr><td>Firebase Remote Config</td><td>Downloads configuration only; sends no personal data</td>
-        <td>Update settings (e.g. relay servers) without an app update</td></tr>
+        <td>Adjust settings (e.g. relay servers, feature flags) without an app update</td></tr>
+      <tr><td>This website</td><td>Google Analytics 4 counts anonymous page visits and download clicks</td>
+        <td>Understand how many people find and install the app</td></tr>
     </table></div>
-    <p>This website (the page you are reading) also uses Google Analytics 4 to count anonymous visits
-    and download clicks. We <strong>do not</strong> collect your name, email, contacts, precise
-    location, or the content of your video/audio. The 4-digit pairing code is <strong>not</strong> sent
-    to Firebase. Firebase's own handling of this data is governed by
-    <a href="https://firebase.google.com/support/privacy" rel="noopener">Google's privacy terms</a>.</p>
+    <p>We do <strong>not</strong> collect your name, email, contacts, precise location, or the content of
+    your video/audio. The 4-digit pairing code is <strong>not</strong> sent to Firebase. Google's handling
+    of this data is governed by <a href="https://firebase.google.com/support/privacy" rel="noopener">Google's
+    privacy terms</a>.</p>
 
-    <h2>5. Permissions we request</h2>
+    <h2>10. Permissions we request</h2>
     <div class="tw"><table>
       <tr><th>Permission</th><th>Purpose</th></tr>
       <tr><td>Camera</td><td>Baby-mode video (baby device only)</td></tr>
       <tr><td>Microphone</td><td>Baby-mode audio and two-way talk</td></tr>
-      <tr><td>Notifications</td><td>Show the ongoing-monitor notification and alerts</td></tr>
-      <tr><td>Foreground service (camera/microphone)</td><td>Keep monitoring while the screen is off</td></tr>
-      <tr><td>Run at startup / ignore battery optimizations</td><td>Resume monitoring reliably</td></tr>
+      <tr><td>Notifications</td><td>The ongoing-monitor notification, alerts, and reminder alarms</td></tr>
+      <tr><td>Foreground service (camera / microphone / media)</td><td>Keep monitoring while the screen is off</td></tr>
+      <tr><td>Bluetooth (nearby devices)</td><td>Discover nearby devices for the optional Nearby Talk — never used for location</td></tr>
+      <tr><td>Run at startup / ignore battery optimizations</td><td>Resume monitoring reliably after reboot or background</td></tr>
+      <tr><td>Display over other apps</td><td>Bring the baby app forward on a remote wake so the camera can resume</td></tr>
+      <tr><td>Install unknown apps</td><td>Only if you use the in-app updater to install a new version</td></tr>
       <tr><td>Biometric</td><td>Optional app lock (stays on device)</td></tr>
     </table></div>
 
-    <h2>6. Data retention &amp; deletion</h2>
+    <h2>11. Third-party services</h2>
+    <p>For transparency, BabyCam relies on these services purely for connectivity and diagnostics — none
+    of them receive your video or audio:</p>
     <ul>
-      <li>Audio/video is never retained — it is not stored anywhere.</li>
-      <li>Pairing data lives on your device; clearing it ("Forget pairing") or uninstalling removes it.</li>
-      <li>Analytics/crash data held by Firebase can be deleted on request — email
-      <a href="mailto:mz.ashah@outlook.com">mz.ashah@outlook.com</a> and we will action deletion via
-      Firebase.</li>
+      <li><strong>HiveMQ</strong> — relays encrypted connection-setup messages (ciphertext only).</li>
+      <li><strong>Cloudflare</strong> — TURN relay for cross-network connections, and a small worker that
+      forwards wake pushes.</li>
+      <li><strong>Google Firebase / Cloud Messaging</strong> — analytics, crash reporting, remote
+      configuration, and wake pushes.</li>
+      <li><strong>Google Analytics</strong> — anonymous visit/download counts for this website only.</li>
     </ul>
 
-    <h2>7. Children's privacy</h2>
-    <p>BabyCam is a tool for parents/guardians. It is not directed at children as users and does not
+    <h2>12. Data retention &amp; deletion</h2>
+    <ul>
+      <li>Audio/video is never retained — it is not stored anywhere.</li>
+      <li>Pairing data, reminders, and settings live on your device; clearing them ("Forget pairing") or
+      uninstalling the app removes them.</li>
+      <li>Anonymous analytics/crash data held by Firebase can be deleted on request — email
+      <a href="mailto:mz.ashah@outlook.com">mz.ashah@outlook.com</a> and we will action deletion.</li>
+    </ul>
+
+    <h2>13. Children's privacy</h2>
+    <p>BabyCam is a tool for parents and guardians. It is not directed at children as users and does not
     knowingly collect personal information from children. The camera simply serves the caregiver.</p>
 
-    <h2>8. Changes to this policy</h2>
-    <p>We may update this policy; material changes will be reflected by the "Last updated" date above.</p>
+    <h2>14. Changes to this policy</h2>
+    <p>We may update this policy as the app evolves; material changes will be reflected by the "Last
+    updated" date above.</p>
   </div>
 </div>
 <footer>BabyCam · Zuhaib Ali Shah · <a href="mailto:mz.ashah@outlook.com">mz.ashah@outlook.com</a> · <a href="https://wa.me/923152879102">WhatsApp</a></footer>

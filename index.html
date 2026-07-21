@@ -497,5 +497,47 @@
     });
   })();
 </script>
+
+<!-- Friendly, dismissible notice — reappears occasionally (every ~3 days) -->
+<style>
+  #bc-notice{position:fixed;left:16px;right:16px;bottom:16px;z-index:200;max-width:540px;margin:0 auto;
+    background:rgba(14,20,34,.97);backdrop-filter:blur(10px);border:1px solid rgba(127,119,221,.4);
+    border-radius:16px;padding:16px 18px;box-shadow:0 22px 55px rgba(0,0,0,.55);
+    display:none;transform:translateY(22px);opacity:0;transition:transform .4s cubic-bezier(.2,.7,.2,1),opacity .4s}
+  #bc-notice.show{display:block;transform:none;opacity:1}
+  #bc-notice .nt{color:#EFF2FF;font-size:14px;line-height:1.58}
+  #bc-notice .nt b{color:#7CE0A8}
+  #bc-notice .row{display:flex;gap:10px;align-items:center;margin-top:13px;flex-wrap:wrap}
+  #bc-notice a.rep{font-size:13.5px;font-weight:700;color:#fff;background:linear-gradient(150deg,#7F77DD,#534AB7);
+    padding:9px 15px;border-radius:10px;text-decoration:none}
+  #bc-notice button.cl{margin-left:auto;background:none;border:1px solid rgba(255,255,255,.2);color:#BAC5EA;
+    border-radius:9px;padding:8px 15px;font-size:13.5px;font-weight:600;cursor:pointer}
+  #bc-notice button.cl:hover{color:#fff;border-color:#7F77DD}
+</style>
+<div id="bc-notice" role="dialog" aria-live="polite">
+  <div class="nt">💙 <b>We're always improving BabyCam.</b> New features and fixes roll out often, so if
+    something doesn't work quite right, please don't be discouraged — kindly report it and we'll fix it
+    quickly. Whenever a newer version is available, do update to it for the smoothest experience.
+    Thank you for your support!</div>
+  <div class="row">
+    <a class="rep" href="https://wa.me/923152879102" target="_blank" rel="noopener">Report an issue</a>
+    <button class="cl" onclick="bcCloseNotice()">Got it</button>
+  </div>
+</div>
+<script>
+  (function(){
+    var KEY='bc_notice_dismissed', DAYS=3;
+    function show(){var n=document.getElementById('bc-notice'); if(n) n.classList.add('show');}
+    try{
+      var last=parseInt(localStorage.getItem(KEY)||'0',10);
+      if(!last || (Date.now()-last) > DAYS*86400000) setTimeout(show,1600);
+    }catch(e){ setTimeout(show,1600); }
+  })();
+  function bcCloseNotice(){
+    var n=document.getElementById('bc-notice'); if(n) n.classList.remove('show');
+    try{ localStorage.setItem('bc_notice_dismissed', String(Date.now())); }catch(e){}
+    if(typeof gtag==='function'){ gtag('event','notice_dismissed'); }
+  }
+</script>
 </body>
 </html>

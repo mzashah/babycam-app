@@ -41,7 +41,7 @@
   "applicationCategory": "LifestyleApplication",
   "description": "Turn two Android phones into a private, end-to-end encrypted baby monitor. Live video and two-way talk, lullabies and white noise, remote camera/mic/flashlight control, safety reminders, and app lock. Free — no account, no subscription, no cloud recording.",
   "url": "https://mzashah.github.io/babycam-app/",
-  "downloadUrl": "https://github.com/mzashah/babycam-app/releases/latest/download/app-release.apk",
+  "downloadUrl": "https://github.com/mzashah/babycam-releases/releases/latest/download/app-release.apk",
   "softwareVersion": "1.2",
   "fileSize": "40MB",
   "image": "https://mzashah.github.io/babycam-app/assets/og-image.png",
@@ -305,7 +305,7 @@
         talk, and lullabies. The stream stays <b>directly between your two phones</b>, end-to-end
         encrypted. No account, no subscription, no cloud.</p>
       <div class="cta-row reveal d3">
-        <a class="btn btn-primary" href="https://github.com/mzashah/babycam-app/releases/latest/download/app-release.apk" download>
+        <a class="btn btn-primary" href="https://github.com/mzashah/babycam-releases/releases/latest/download/app-release.apk" download>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
           Download APK
         </a>
@@ -411,7 +411,7 @@
       <span class="kicker">Get BabyCam</span>
       <h2>Download &amp; set up in a minute</h2>
       <p>Free forever. Install the APK on two Android phones — no Play Store account required.</p>
-      <a class="btn btn-primary" href="https://github.com/mzashah/babycam-app/releases/latest/download/app-release.apk" download>
+      <a class="btn btn-primary" href="https://github.com/mzashah/babycam-releases/releases/latest/download/app-release.apk" download>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
         Download APK
       </a>
@@ -483,7 +483,7 @@
     var on=function(){h.classList.toggle('stuck',window.scrollY>8)};on();
     window.addEventListener('scroll',on,{passive:true});})();
   // live version label (button works regardless)
-  fetch("https://github.com/mzashah/babycam-app/releases/latest/download/version.json",{cache:"no-store"})
+  fetch("https://github.com/mzashah/babycam-releases/releases/latest/download/version.json",{cache:"no-store"})
     .then(function(r){return r.ok?r.json():null})
     .then(function(v){ if(v&&v.versionName){document.getElementById("ver").textContent="Latest: v"+v.versionName;} })
     .catch(function(){});

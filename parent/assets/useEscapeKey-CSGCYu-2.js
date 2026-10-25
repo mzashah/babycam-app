@@ -1,0 +1,1 @@
+import{l as e,u as t}from"./index-BMvFPTYS.js";var n=t(e(),1);function r(e){(0,n.useEffect)(()=>{if(!e)return;let t=t=>{t.key===`Escape`&&e()};return window.addEventListener(`keydown`,t),()=>window.removeEventListener(`keydown`,t)},[e])}export{r as t};
